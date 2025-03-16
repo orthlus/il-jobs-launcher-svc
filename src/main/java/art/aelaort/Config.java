@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 public class Config {
 	@Bean
-	public ApiClient kubernetesApiClient() throws Exception {
+	public ApiClient k8s() throws Exception {
 		ApiClient client = io.kubernetes.client.util.Config.defaultClient();
 		io.kubernetes.client.openapi.Configuration.setDefaultApiClient(client);
 		return client;
