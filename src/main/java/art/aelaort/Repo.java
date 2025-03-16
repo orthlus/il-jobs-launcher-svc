@@ -1,6 +1,7 @@
 package art.aelaort;
 
-import art.aelaort.tables.Tasks;
+import art.aelaort.il_processing.tables.TasksDownloadTorrent;
+import art.aelaort.il_processing.tables.TasksGenerateHls;
 import lombok.RequiredArgsConstructor;
 import org.jooq.impl.DefaultDSLContext;
 import org.springframework.stereotype.Component;
@@ -10,15 +11,22 @@ import org.springframework.stereotype.Component;
 public class Repo {
 	private final DefaultDSLContext dsl;
 	private final DictRepo dictRepo;
-	private final Tasks t = Tasks.TASKS;
+	private final TasksDownloadTorrent tdt = TasksDownloadTorrent.TASKS_DOWNLOAD_TORRENT;
+	private final TasksGenerateHls tgh = TasksGenerateHls.TASKS_GENERATE_HLS;
 
-	public void getNewTasks(String type) {
-		Integer typeid = dictRepo.getTypes().get(type);
-		Integer status = dictRepo.getStatuses().get("todo");
+	public void getNewGenerateTasks() {
+		Integer status = dictRepo.getTaskStatuses().get("todo");
 		dsl.select()
-				.from(t)
-				.where(t.TYPE_ID.eq(typeid))
-				.and(t.STATUS_ID.eq(status))
+				.from(tgh)
+				.where(tgh.STATUS_ID.eq(status))
+				.fetch();
+	}
+
+	public void getNewDownloadTasks() {
+		Integer status = dictRepo.getTaskStatuses().get("todo");
+		dsl.select()
+				.from(tdt)
+				.where(tdt.STATUS_ID.eq(status))
 				.fetch();
 	}
 }
